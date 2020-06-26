@@ -26,43 +26,47 @@ fig14, ((ax15, ax16), (ax17, ax18)) = plt.subplots(2, 2, figsize=(8, 5))
 
 sns.distplot(val["Peru"]["Ei_values"], kde=False, bins=15, ax=ax15)
 ax15.set_xlim(0, 1)
+ax15.set_ylim(0, 20)
 ax15.set_title("Perú")
 ax15.set_xlabel("AE/P predecido")
 ax15.set_ylabel("Frecuencia")
 ax15.scatter(x=val["Peru"]["Ei_values"].median(), y=2, color='r', marker="X", s=100)
 ax15.scatter(x=val["Peru"]["Ei_median"].Ei, y=2, color='b', marker=".", s=100)
 
-sns.distplot(val["Nivel"]["Ei_values_pac"], kde=False, bins=14, ax=ax16)
+sns.distplot(val["Nivel"]["Ei_values_pac"], kde=False, bins=7, ax=ax16)
 ax16.set_xlim(0, 1)
+ax16.set_ylim(0, 20)
 ax16.set_title("Pacífico")
 ax16.set_xlabel("AE/P predecido")
 ax16.set_ylabel("Frecuencia")
-ax16.scatter(x=val["Nivel"]["Ei_values_pac"].median(), y=.5, color='r', marker="X", s=100)
-ax16.scatter(x=val["Nivel"]["Ei_median"].Ei.Pacífico, y=.5, color='b', marker=".", s=100)
+ax16.scatter(x=val["Nivel"]["Ei_values_pac"].median(), y=2, color='r', marker="X", s=100)
+ax16.scatter(x=val["Nivel"]["Ei_median"].Ei.Pacífico, y=2, color='b', marker=".", s=100)
 
-sns.distplot(val["Nivel"]["Ei_values_amz"], kde=False, bins=10, ax=ax17)
+sns.distplot(val["Nivel"]["Ei_values_amz"], kde=False, bins=15, ax=ax17)
 ax17.set_xlim(0, 1)
+ax17.set_ylim(0, 20)
 ax17.set_title("Amazonas")
 ax17.set_xlabel("AE/P predecido")
 ax17.set_ylabel("Frecuencia")
-ax17.scatter(x=val["Nivel"]["Ei_values_amz"].median(), y=1.3, color='r', marker="X", s=100)
-ax17.scatter(x=val["Nivel"]["Ei_median"].Ei.Amazonas, y=1.3, color='b', marker=".", s=100)
+ax17.scatter(x=val["Nivel"]["Ei_values_amz"].median(), y=2, color='r', marker="X", s=100)
+ax17.scatter(x=val["Nivel"]["Ei_median"].Ei.Amazonas, y=2, color='b', marker=".", s=100)
 
 sns.distplot(val["Nivel"]["Ei_values_tit"], kde=False, bins=5, ax=ax18)
 ax18.set_xlim(0, 1)
+ax18.set_ylim(0, 20)
 ax18.set_title("Titicaca")
 ax18.set_xlabel("AE/P predecido")
 ax18.set_ylabel("Frecuencia")
-ax18.scatter(x=val["Nivel"]["Ei_values_tit"].median(), y=0.25, color='r', marker="X", s=100)
-ax18.scatter(x=val["Nivel"]["Ei_median"].Ei.Titicaca, y=.25, color='b', marker=".", s=100)
+ax18.scatter(x=val["Nivel"]["Ei_values_tit"].median(), y=2, color='r', marker="X", s=100)
+ax18.scatter(x=val["Nivel"]["Ei_median"].Ei.Titicaca, y=2, color='b', marker=".", s=100)
 
 plt.tight_layout()
 
-fig14.savefig("./output/figures/09_proBK_val.png", bbox_inches='tight')
+fig14.savefig("./output/figures/09_proBK_val.png", bbox_inches='tight', dpi=200)
 plt.close()
 
 # predicted Ei at basin scale with nivels
-
+plt.rc('grid', linestyle=":", color='black', alpha=.5)
 fig13, ax14 = plt.subplots(figsize=(5,6))
 
 cmap = mpl.colors.LinearSegmentedColormap.from_list("", ["indianred","white","dodgerblue"])
@@ -72,13 +76,13 @@ ax14 = bdk_shp[bdk_shp.Ei.notna()].plot("Ei", cmap=cmap, vmin=-30, vmax=30, lege
 bdk_shp[bdk_shp.Ei.isna()].plot(ax=ax14, color="lightgrey")
 scatter = ax14.collections[0]
 plt.colorbar(scatter, ax=ax14, extend='min')
-ax14.axis('off')
-ax14.set_ylim(-18.5,0)
-ax14.set_xlim(-81.3,-68.7)
-ax14.grid(False)
+#ax14.axis('off')
+ax14.set_ylim(-18.5, 0.25)
+ax14.set_xlim(-82, -68.5)
+#ax14.grid(False)
 #ax14.set_title("Error (%)")
 
-fig13.savefig("./output/figures/10_proBK_basin_by_nivel.png", bbox_inches='tight')
+fig13.savefig("./output/figures/10_proBK_basin_by_nivel.png", bbox_inches='tight', dpi=200)
 plt.close()
 
 # predicted Ei at basin scale without nivels

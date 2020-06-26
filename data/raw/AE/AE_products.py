@@ -8,11 +8,12 @@ import pickle
 lat_new = np.arange(-18.5, 0.2, 0.01)
 lon_new = np.arange(-81.5, -68.25, 0.01)
 
-shp = "./data/raw/AE/Sudamérica.shp"
+shp = "./data/raw/SHP/Sudamérica.shp"
 shp = salem.read_shapefile(shp).\
     to_crs({"init": "epsg:4326"}).iloc[11:12]
 
 #zhang2015
+#P-LSH
 
 ae_zhang = xr.concat([xr.open_dataset(f) for f in glob.glob('./data/raw/AE/Zhang/Peru/*.nc')],
                dim='time'). \
@@ -116,10 +117,10 @@ ae_mean_c = ae_mean.sel(time=slice(2000, 2014)).\
 
 mean_ae = {"GLEAM": ae_gleam_c,
            "MODIS16": ae_modis16_c,
-           "MEAN": ae_mean_c,
+           "PROMEDIO": ae_mean_c,
            "SSEBop": ae_ssebop_c,
            "TerraClimate": ae_tc_c,
-           "Zhang": ae_zhang_c}
+           "P-LSH": ae_zhang_c}
 
 pickle.dump(mean_ae, open("./data/processed/AE/ae_products.pkl", "wb"))
 pickle.dump(ae_gleam_c, open("./data/processed/AE/ae_gleam.pkl", "wb"))

@@ -5,7 +5,7 @@ import pickle
 lat_new = np.arange(-18.5, 0.2, 0.01)
 lon_new = np.arange(-81.5, -68.25, 0.01)
 
-p = "/data/raw/PISCO/p.nc"
+p = "./data/raw/PISCO/p.nc"
 p = xr.open_dataset(p, decode_times=False).\
     drop("z_bnds").\
     rename({"z":"time"}).\

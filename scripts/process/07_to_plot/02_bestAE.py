@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle
+from adjustText import adjust_text
 
 sns.set_style("whitegrid")
 sns.set_context("paper", font_scale=1.3, rc={"lines.linewidth": 1})
@@ -11,6 +12,52 @@ sns.set_context("paper", font_scale=1.3, rc={"lines.linewidth": 1})
 
 resWB = pickle.load(open("./scripts/to_output/resWB.pkl", "rb"))
 resBK = pickle.load(open("./scripts/to_output/resBK.pkl", "rb"))
+
+# BUDYKO CURVE FOR ALL DATASET
+
+df_WB = resWB["resDF"].groupby("Basin").mean()
+df_WB["ET_BK"] = resBK["resBK"].groupby("Basin").mean().ET_BK
+df_WB["Ei_WB"] = df_WB["ET_WB"]/df_WB["PP"]
+df_WB["Ei_BK"] = df_WB["ET_BK"]/df_WB["PP"]
+df_WB["Ai"] = df_WB["PET"]/df_WB["PP"]
+df_WB["Basin"] = df_WB.index
+
+df_ET_m = resWB["resDF"]
+df_ET_m["Ei"] = df_ET_m["ET_m_values"]/df_ET_m["PP"]
+df_ET_m["Ai"] = df_ET_m["PET"]/df_ET_m["PP"]
+
+
+fig, ((ax1, ax2, ax3, ax4), (ax5, ax6, ax7, ax8)) = plt.subplots(2, 4, figsize=(8, 3), dpi=300, sharey=True, sharex=True)
+
+def budyko_curve_plot(data, X, Y, title, ax):
+    sns.scatterplot(X, Y, data=data, s=15, linewidth=0.5, color="skyblue", edgecolor="black", alpha=.75, ax=ax)
+    ax.plot(np.arange(0,1.1,.1), np.arange(0,1.1,.1), "black", linewidth=1, alpha = .5)
+    ax.plot(np.arange(1,12,1), np.repeat(1,11), "black", linewidth=1, alpha = .5)
+    ax.set_xlim(0, 8.5)#600
+    ax.set_ylim(0, 1.5)
+    ax.set_title(title, color = "black", size = 10)
+    ax.xaxis.set_tick_params(labelsize = 7, pad = -3)
+    ax.yaxis.set_tick_params(labelsize = 7, pad = -3)
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+    texts = [ax.text(data[X].values[i], data[Y].values[i], data["Basin"].values[i], size = 4, fontweight='bold', alpha = .6) for i in range(len(df_WB["Basin"]))]
+    adjust_text(texts, arrowprops={"arrowstyle":'-', "color":'red', "alpha":.75, "lw":.15}, expand_text=(2, 2), only_move={'objects': 'xy', 'points': 'xy', 'text': 'y'}, ax = ax)
+
+budyko_curve_plot(data = df_WB, X = "Ai", Y = "Ei_WB", title = "Balance Hídrico", ax = ax1)
+budyko_curve_plot(data = df_WB, X = "Ai", Y = "Ei_BK", title = "Budyko Determinístico", ax = ax2)
+budyko_curve_plot(data = df_ET_m[df_ET_m["ET_m"] == "GLEAM"], X = "Ai", Y = "Ei", title = "GLEAM", ax = ax3)
+budyko_curve_plot(data = df_ET_m[df_ET_m["ET_m"] == "MODIS16"], X = "Ai", Y = "Ei", title = "MODIS16", ax = ax4)
+budyko_curve_plot(data = df_ET_m[df_ET_m["ET_m"] == "PROMEDIO"], X = "Ai", Y = "Ei", title = "PROMEDIO", ax = ax5)
+budyko_curve_plot(data = df_ET_m[df_ET_m["ET_m"] == "SSEBop"], X = "Ai", Y = "Ei", title = "SSEBop", ax = ax6)
+budyko_curve_plot(data = df_ET_m[df_ET_m["ET_m"] == "TerraClimate"], X = "Ai", Y = "Ei", title = "TerraClimate", ax = ax7)
+budyko_curve_plot(data = df_ET_m[df_ET_m["ET_m"] == "P-LSH"], X = "Ai", Y = "Ei", title = "P-LSH", ax = ax8)
+
+fig.text(0.5, 0.03, 'Índice de aridez', ha='center', size = 8)
+fig.text(0.08, 0.5, 'Índice de evaporación', va='center', rotation='vertical', size = 8)
+
+plt.savefig("./output/figures/04_05_curve_all_data.png",
+            pad_inches = 0,  bbox_inches='tight')
+plt.close()
 
 # BIAS BY BASIN AND MODEL
 
@@ -33,7 +80,7 @@ ax2.set_xlabel("")
 
 plt.tight_layout()
 
-fig.savefig("./output/figures/04_BIAS_by_basin.png", bbox_inches='tight')
+fig.savefig("./output/figures/04_BIAS_by_basin.png", bbox_inches='tight', dpi = 200)
 plt.close()
 
 # WHICH PRODUCT IS THE BEST: RANKING
@@ -55,5 +102,5 @@ rank = [pd.Series(res_RRMSE.sort_values(by="r_BH", ascending=False).index),
 rank = pd.concat(rank, axis=1)
 rank.apply(lambda x: x.mode(), axis=1)
 """
-by hand: GLEAM:3, MEAN:8, MODIS16:12, TerraClimate:14, Zhang:20, SSEBop:28 
+by hand: GLEAM:3, MEAN:8, MODIS16:12, TerraClimate:14, P-LSH(Zhang):20, SSEBop:28 
 """

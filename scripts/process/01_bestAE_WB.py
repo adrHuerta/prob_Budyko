@@ -6,6 +6,7 @@ import pickle
 # actual evapotranspiration and precipitation
 
 annual_p = pickle.load(open("./data/processed/PISCO/p.pkl", "rb"))
+annual_pet = pickle.load(open("./data/processed/PISCO/pet.pkl", "rb"))
 annual_ae = pickle.load(open("./data/processed/AE/ae_products.pkl", "rb"))
 
 # Q and basins
@@ -20,6 +21,7 @@ for i in range(len(shp)):
     subx = shp.iloc[i: i + 1]
 
     PP = (annual_p.salem.subset(shape=subx)).salem.roi(shape=subx).mean().values.tolist()
+    PET = (annual_pet.salem.subset(shape=subx)).salem.roi(shape=subx).mean().values.tolist()
     #(annual_p.salem.subset(shape=subx)).salem.roi(shape=subx).plot()
     ET_wb = np.round(PP - float(subx.q.values), 2)
 
@@ -33,6 +35,8 @@ for i in range(len(shp)):
     resET.columns = ["ET_m_values"]
     resET["ET_m"] = annual_ae.keys()
     resET["ET_WB"] = ET_wb
+    resET["PET"] = PET
+    resET["PP"] = PP
     resET["Basin"] = subx.Basin.iloc[0]
 
     resDF.append(resET)

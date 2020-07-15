@@ -32,8 +32,8 @@ sns.scatterplot("Ai", "Ei", data=bdk_cal, hue="Nivel",
                 s=50, palette=["red","seagreen","blue"], linewidth=0.1)
 ax.plot(np.arange(0,1.1,.1), np.arange(0,1.1,.1), "black", linewidth=1)
 ax.plot(np.arange(1,601,1), np.repeat(1,600), "black", linewidth=1)
-ax.set_xlim(0,10)#600
-ax.set_ylim(0,1.1)
+ax.set_xlim(-5,10)#600
+ax.set_ylim(0,5)
 ax.set_xlabel("Índice de aridez")
 ax.set_ylabel("Índice de evaporación")
 handles, labels = ax.get_legend_handles_labels()

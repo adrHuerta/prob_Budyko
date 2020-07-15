@@ -66,6 +66,12 @@ fig14.savefig("./output/figures/09_proBK_val.png", bbox_inches='tight', dpi=200)
 plt.close()
 
 # predicted Ei at basin scale with nivels
+
+# mean, max and min error value at basin scale (abs because there are + and - values)
+bdk_shp[bdk_shp.Ei.notna()].Ei.abs().mean()
+bdk_shp[bdk_shp.Ei.notna()].Ei.max()
+bdk_shp[bdk_shp.Ei.notna()].Ei.min()
+
 plt.rc('grid', linestyle=":", color='black', alpha=.5)
 fig13, ax14 = plt.subplots(figsize=(5,6))
 

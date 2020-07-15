@@ -48,3 +48,14 @@ ax22.grid(True)
 
 fig.savefig("./output/figures/00_vertientes.png", bbox_inches='tight', dpi=200)
 plt.close()
+
+# some basic statistics of UH
+
+# although Area is part of the metadata, I prefer to compute it6.
+shp["area"] = shp.to_crs({'init': 'epsg:32718'})['geometry'].area/10**6 #(km2)
+
+shp.loc[shp["area"].idxmax()]
+shp.loc[shp["area"].idxmin()]
+
+import numpy as np
+np.quantile(shp["area"], q=[0.25, 0.5, 0.75])

@@ -43,6 +43,13 @@ for i in range(len(shp)):
     resPP.append(PP)
 
 resDF = pd.concat(resDF).reset_index()
+
+# are negative values of ET_WB?
+# yes! where?
+resDF[resDF["ET_WB"] < 0]["Basin"].unique()
+# dropping "bad data" (it is not bad at all)
+resDF = resDF[resDF["ET_WB"] >= 0]
+
 resDF["BIAS"] = resDF.apply(lambda x: x.ET_m_values - x.ET_WB, axis=1)
 
 resWB = {"resDF":resDF,

@@ -91,7 +91,7 @@ res_RRMSE = pd.concat([resWB["rWB"], resBK["rWB"],
                       axis=1)
 res_RRMSE.columns = ["r_BH", "r_BK", "RMSE_BH", "RMSE_BK", "BIAS_BH", "BIAS_BK"]
 
-res_RRMSE.to_csv("./output/tables/Table_r_rmse_bias_by_AEproduct.csv")
+res_RRMSE.round(2).to_csv("./output/tables/Table_r_rmse_bias_by_AEproduct.csv")
 
 rank = [pd.Series(res_RRMSE.sort_values(by="r_BH", ascending=False).index),
         pd.Series(res_RRMSE.sort_values(by="r_BK", ascending=False).index),
@@ -101,6 +101,4 @@ rank = [pd.Series(res_RRMSE.sort_values(by="r_BH", ascending=False).index),
         pd.Series(res_RRMSE.BIAS_BK.abs().sort_values().index)]
 rank = pd.concat(rank, axis=1)
 rank.apply(lambda x: x.mode(), axis=1)
-"""
-by hand: GLEAM:3, MEAN:8, MODIS16:12, TerraClimate:14, P-LSH(Zhang):20, SSEBop:28 
-"""
+

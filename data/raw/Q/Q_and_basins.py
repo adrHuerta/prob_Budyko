@@ -29,8 +29,11 @@ annual_q.shape
 
 # from Q/s to mm
 for i in annual_q.columns:
-    #    annual_q[i] = annual_q[i] * 1000*365*24*60*60 / shp[shp.Basin == i].Area.tolist()
-    annual_q[i] = annual_q[i] * 1000 * 24 * 30 * 3600 / shp[shp.Basin == i].Area.tolist()
+    #annual_q[i] = annual_q[i] * 1000*365*24*60*60 / shp[shp.Basin == i].Area.tolist()
+    annual_q[i] = annual_q[i] * 86400*1000*30.41*12 / shp[shp.Basin == i].Area.tolist()
+    # https://www.researchgate.net/post/How_to_convert_discharge_m3_s_to_mm_of_discharge
+    #print(annual_q[i] * 1000 * 24 * 30 * 3600 / shp[shp.Basin == i].Area.tolist())
+    #annual_q[i] * 36*24*12*3 / list((shp[shp.Basin == i].Area / 10**6))
 
 ae_mean = pd.DataFrame(annual_q.apply(lambda x: np.nanmean(x)), columns=["q"]).rename_axis('Basin').reset_index()
 ae_mean = shp.merge(ae_mean, on="Basin")
@@ -90,4 +93,3 @@ fig.savefig("./output/figures/00_q_basins.png",
             bbox_inches='tight', dpi=200)
 plt.close()
 
-ae_mean.drop("geometry", axis=1).to_csv("/home/adrian/Documents/wa_budyko_datasets/csv/Table_Q_AREA_BASIN.csv")

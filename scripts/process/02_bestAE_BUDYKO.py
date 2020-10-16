@@ -38,6 +38,9 @@ for i in range(len(shp)):
     resBK.append(resET)
 
 resBK = pd.concat(resBK).reset_index()
+# are negative values of ET_BK?
+resBK[resBK["ET_BK"] < 0]["Basin"].unique()
+# No!
 resBK["BIAS"] = resBK.apply(lambda x: x.ET_m_values - x.ET_BK, axis=1)
 
 resBK = {"resBK":resBK,
